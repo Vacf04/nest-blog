@@ -11,3 +11,16 @@ Content-Type: application/json
   "email": "user@gmail.com",
   "password": "123456"
 }
+
+# USER ########################################################################
+
+### User Create
+# @name userCreate
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+"name": "Víttor",
+  "email": "user@gmail.com",
+  "password": "123456"
+}
