@@ -25,18 +25,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    const userInDb = await this.userService.findById(payload.sub);
+    const user = await this.userService.findById(payload.sub);
 
-    if (!userInDb || userInDb.forceLogout) {
+    if (!user || user.forceLogout) {
       throw new UnauthorizedException('You need to sign in.');
     }
 
-    const user = {
-      id: userInDb.id,
-      name: userInDb.name,
-      email: userInDb.email,
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
     };
-
-    return user;
   }
 }

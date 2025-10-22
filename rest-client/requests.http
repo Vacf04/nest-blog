@@ -32,3 +32,15 @@ Content-Type: application/json
 GET {{baseUrl}}/user
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
+
+### User Patch
+# @name userGet
+
+PATCH {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "name": "Vitin",
+  "email": "vitin@gmail.com"
+}

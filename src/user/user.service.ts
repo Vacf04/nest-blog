@@ -1,9 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HashingService } from 'src/common/hashing/hashing.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -38,6 +43,25 @@ export class UserService {
       id: createdUser.id,
       name: createdUser.name,
       email: createdUser.email,
+    };
+  }
+
+  async update(id: string, dto: UpdateUserDto) {
+    const userInDb = await this.userRepository.findOneBy({ id });
+
+    if (!userInDb) {
+      throw new NotFoundException('User not found.');
+    }
+
+    const updatedUser = await this.userRepository.save({
+      ...userInDb,
+      ...dto,
+    });
+
+    return {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
     };
   }
 
