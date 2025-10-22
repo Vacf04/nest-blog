@@ -40,4 +40,12 @@ export class UserService {
       email: createdUser.email,
     };
   }
+
+  findByemail(email: string) {
+    return this.userRepository.findOneBy({ email });
+  }
+
+  save(user: User) {
+    return this.userRepository.save(user);
+  }
 }
