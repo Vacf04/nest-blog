@@ -41,8 +41,12 @@ export class UserService {
     };
   }
 
-  findByemail(email: string) {
+  findByEmail(email: string) {
     return this.userRepository.findOneBy({ email });
+  }
+
+  findById(id: string) {
+    return this.userRepository.findOneBy({ id });
   }
 
   save(user: User) {

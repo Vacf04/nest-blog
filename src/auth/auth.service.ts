@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserService } from 'src/user/user.service';
@@ -17,7 +13,7 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const user = await this.userService.findByemail(loginDto.email);
+    const user = await this.userService.findByEmail(loginDto.email);
     const invalidCredentialsError = new UnauthorizedException(
       'Invalid user or password.',
     );
