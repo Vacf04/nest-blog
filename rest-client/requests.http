@@ -36,7 +36,7 @@ Authorization: Bearer {{jwtToken}}
 ### User Patch
 # @name userGet
 
-PATCH {{baseUrl}}/user
+PATCH {{baseUrl}}/user/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 

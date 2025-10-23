@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -18,16 +19,36 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async create(dto: CreateUserDto) {
-    const exists = await this.userRepository.exists({
-      where: {
-        email: dto.email,
-      },
+  findByEmail(email: string) {
+    return this.userRepository.findOneBy({ email });
+  }
+
+  findById(id: string) {
+    return this.userRepository.findOneBy({ id });
+  }
+
+  async findOneByOrFail(userData: Partial<User>) {
+    const user = await this.userRepository.findOneBy(userData);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
+  }
+
+  async failIfEmailExists(email: string) {
+    const exists = await this.userRepository.existsBy({
+      email,
     });
 
     if (exists) {
-      throw new ConflictException('This Email already exists.');
+      throw new ConflictException('E-mail já existe');
     }
+  }
+
+  async create(dto: CreateUserDto) {
+    await this.failIfEmailExists(dto.email);
 
     const hashedPassword = await this.hashingService.hash(dto.password);
 
@@ -47,30 +68,27 @@ export class UserService {
   }
 
   async update(id: string, dto: UpdateUserDto) {
-    const userInDb = await this.userRepository.findOneBy({ id });
-
-    if (!userInDb) {
-      throw new NotFoundException('User not found.');
+    if (!dto.name && !dto.email) {
+      throw new BadRequestException('Dados não enviados');
     }
 
-    const updatedUser = await this.userRepository.save({
-      ...userInDb,
-      ...dto,
-    });
+    const user = await this.findOneByOrFail({ id });
+
+    user.name = dto.name ?? user.name;
+
+    if (dto.email && dto.email !== user.email) {
+      await this.failIfEmailExists(dto.email);
+      user.email = dto.email;
+      user.forceLogout = true;
+    }
+
+    const updatedUser = await this.save(user);
 
     return {
       id: updatedUser.id,
-      email: updatedUser.email,
       name: updatedUser.name,
+      email: updatedUser.email,
     };
-  }
-
-  findByEmail(email: string) {
-    return this.userRepository.findOneBy({ email });
-  }
-
-  findById(id: string) {
-    return this.userRepository.findOneBy({ id });
   }
 
   save(user: User) {
