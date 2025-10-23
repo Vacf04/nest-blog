@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
   "email": "user@gmail.com",
-  "password": "123456"
+  "password": "vitindograu"
 }
 
 # USER ########################################################################
@@ -34,13 +34,24 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 ### User Patch
-# @name userGet
+# @name userPatch
 
 PATCH {{baseUrl}}/user/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-    "name": "Vitin",
-  "email": "vitin@gmail.com"
+    "name": "Vitin"
+}
+
+### User Update Password
+# @name userUpdatePassword
+
+PATCH {{baseUrl}}/user/me/password
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "password": "123456",
+    "newPassword": "vitindograu"
 }

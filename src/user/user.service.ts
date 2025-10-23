@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -31,7 +33,7 @@ export class UserService {
     const user = await this.userRepository.findOneBy(userData);
 
     if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found.');
     }
 
     return user;
@@ -43,7 +45,7 @@ export class UserService {
     });
 
     if (exists) {
-      throw new ConflictException('E-mail já existe');
+      throw new ConflictException('E-mail already exists.');
     }
   }
 
@@ -58,18 +60,12 @@ export class UserService {
       password: hashedPassword,
     };
 
-    const createdUser = await this.userRepository.save(newUser);
-
-    return {
-      id: createdUser.id,
-      name: createdUser.name,
-      email: createdUser.email,
-    };
+    return await this.userRepository.save(newUser);
   }
 
   async update(id: string, dto: UpdateUserDto) {
     if (!dto.name && !dto.email) {
-      throw new BadRequestException('Dados não enviados');
+      throw new BadRequestException('Data not sent.');
     }
 
     const user = await this.findOneByOrFail({ id });
@@ -82,13 +78,33 @@ export class UserService {
       user.forceLogout = true;
     }
 
-    const updatedUser = await this.save(user);
+    return await this.save(user);
+  }
 
-    return {
-      id: updatedUser.id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-    };
+  async updatePassword(id: string, dto: UpdatePasswordDto) {
+    if (dto.newPassword === dto.password) {
+      throw new BadRequestException(
+        'The new password must be different from the past password.',
+      );
+    }
+
+    const user = await this.findOneByOrFail({ id });
+
+    const isValid = await this.hashingService.compare(
+      dto.password,
+      user.password,
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException('Incorrect current password.');
+    }
+
+    const newPassword = await this.hashingService.hash(dto.newPassword);
+
+    user.password = newPassword;
+    user.forceLogout = true;
+
+    return await this.save(user);
   }
 
   save(user: User) {
