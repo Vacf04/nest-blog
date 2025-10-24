@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { AuthGuard } from '@nestjs/passport';
 import type { AuthenticatedRequest } from 'src/auth/types/authenticated-requests';
@@ -8,6 +16,25 @@ import { PostResponseDto } from './dto/post-response.dto';
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
+
+  @Get()
+  async readAllPostPublic() {
+    const posts = await this.postService.readAllPostPublic();
+    return posts.map((post) => new PostResponseDto(post));
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  async readAllPostOwned(@Req() req: AuthenticatedRequest) {
+    const posts = await this.postService.readAllPostOwned(req.user.id);
+    return posts.map((post) => new PostResponseDto(post));
+  }
+
+  @Get(':slug')
+  async readOnePostPublic(@Param('slug') slug: string) {
+    const post = await this.postService.readOnePostPublic(slug);
+    return new PostResponseDto(post);
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('me')

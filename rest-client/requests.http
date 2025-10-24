@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
   "email": "user@gmail.com",
-  "password": "vitindograu"
+  "password": "123456"
 }
 
 # USER ########################################################################
@@ -62,3 +62,41 @@ Authorization: Bearer {{jwtToken}}
 DELETE {{baseUrl}}/user/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
+
+# POST ########################################################################
+
+### Create post owned
+# @name createPostOwned
+POST {{baseUrl}}/post/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "title": "Título do pa",
+  "excerpt": "Excerto do post",
+  "content": "Conteúdo",
+  "coverImageUrl": "http://localhost"
+}
+
+### Read one post public
+# @name readOnePostPublic
+GET {{baseUrl}}/post/titulo-do-pa-rw8b7b
+Content-Type: application/json
+
+### Read all post public
+# @name readAllPostPublic
+GET {{baseUrl}}/post
+Content-Type: application/json
+
+### Read one post owned
+# @name readOnePostOwned
+GET {{baseUrl}}/post/me/titulo-do-pa-mnkit6
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Read all post owned
+# @name readAllPostOwned
+GET {{baseUrl}}/post/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
