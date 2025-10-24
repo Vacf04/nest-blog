@@ -29,7 +29,7 @@ Content-Type: application/json
 ### User Get
 # @name userGet
 
-GET {{baseUrl}}/user
+GET {{baseUrl}}/user/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -55,3 +55,10 @@ Authorization: Bearer {{jwtToken}}
     "password": "123456",
     "newPassword": "vitindograu"
 }
+
+### User Delete
+# @name userDelete
+
+DELETE {{baseUrl}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}

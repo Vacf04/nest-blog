@@ -107,6 +107,12 @@ export class UserService {
     return await this.save(user);
   }
 
+  async deleteUser(id: string) {
+    const user = await this.findOneByOrFail({ id });
+    await this.userRepository.delete({ id });
+    return user;
+  }
+
   save(user: User) {
     return this.userRepository.save(user);
   }
