@@ -72,7 +72,7 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "title": "Título do pa",
+  "title": "Título do post",
   "excerpt": "Excerto do post",
   "content": "Conteúdo",
   "coverImageUrl": "http://localhost"
@@ -90,7 +90,7 @@ Content-Type: application/json
 
 ### Read one post owned
 # @name readOnePostOwned
-GET {{baseUrl}}/post/me/titulo-do-post-nh9pdn
+GET {{baseUrl}}/post/me/mudei-o-titulo-aq-emm-achfft
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -103,12 +103,12 @@ Authorization: Bearer {{jwtToken}}
 
 ### Update post
 # @name updatePost
-PATCH {{baseUrl}}/post/me/titulo-do-post-nh9pdn
+PATCH {{baseUrl}}/post/me/mudei-o-titulo-aq-emm-achfft
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-    "title": "Mudei o titulo aq emm",
+    "title": "Mudei o kulo aq emm",
     "content": "dale dale dale dale"
 }
 

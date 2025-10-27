@@ -58,6 +58,7 @@ export class PostService {
     }
 
     post.title = dto.title ?? post.title;
+    post.slug = createSlugFromText(post.title);
     post.content = dto.content ?? post.content;
     post.excerpt = dto.excerpt ?? post.excerpt;
     post.coverImageUrl = dto.coverImageUrl ?? post.coverImageUrl;

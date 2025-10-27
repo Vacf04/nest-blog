@@ -1,4 +1,4 @@
-import { generateRandomSuffix } from './generate-random-suffix';
+import { generateRandomSuffix } from 'src/common/utils/generate-random-suffix';
 import { slugify } from './slugify';
 
 export function createSlugFromText(text: string) {
