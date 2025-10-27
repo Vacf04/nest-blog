@@ -80,7 +80,7 @@ Authorization: Bearer {{jwtToken}}
 
 ### Read one post public
 # @name readOnePostPublic
-GET {{baseUrl}}/post/titulo-do-pa-rw8b7b
+GET {{baseUrl}}/post/titulo-do-post-nh9pdn
 Content-Type: application/json
 
 ### Read all post public
@@ -90,7 +90,7 @@ Content-Type: application/json
 
 ### Read one post owned
 # @name readOnePostOwned
-GET {{baseUrl}}/post/me/titulo-do-pa-mnkit6
+GET {{baseUrl}}/post/me/titulo-do-post-nh9pdn
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
@@ -99,4 +99,16 @@ Authorization: Bearer {{jwtToken}}
 GET {{baseUrl}}/post/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
+
+
+### Update post
+# @name updatePost
+PATCH {{baseUrl}}/post/me/titulo-do-post-nh9pdn
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+    "title": "Mudei o titulo aq emm",
+    "content": "dale dale dale dale"
+}
 

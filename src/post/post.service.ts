@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { createSlugFromText } from './utils/create-slug-from-text';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
@@ -33,13 +34,36 @@ export class PostService {
       .save(post)
       .catch((err: unknown) => {
         if (err instanceof Error) {
-          this.logger.error('Erro ao criar post', err.stack);
+          this.logger.error('Error creating post', err.stack);
         }
 
-        throw new BadRequestException('Erro ao criar o post');
+        throw new BadRequestException('Error creating post');
       });
 
     return created;
+  }
+
+  async update(slug: string, dto: UpdatePostDto, user: User) {
+    if (Object.keys(dto).length === 0) {
+      throw new BadRequestException('Dados não enviados');
+    }
+
+    const post = await this.postRepository.findOne({
+      where: { slug, author: { id: user.id } },
+      relations: ['author'],
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post not found.');
+    }
+
+    post.title = dto.title ?? post.title;
+    post.content = dto.content ?? post.content;
+    post.excerpt = dto.excerpt ?? post.excerpt;
+    post.coverImageUrl = dto.coverImageUrl ?? post.coverImageUrl;
+    post.published = dto.published ?? post.published;
+
+    return this.postRepository.save(post);
   }
 
   async readAllPostPublic() {
@@ -96,5 +120,20 @@ export class PostService {
     });
 
     return posts;
+  }
+
+  async remove(slug: string, user: User) {
+    const post = await this.postRepository.findOne({
+      where: { slug, author: { id: user.id } },
+      relations: ['author'],
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post not found.');
+    }
+
+    await this.postRepository.delete(post);
+
+    return post;
   }
 }
