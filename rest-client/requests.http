@@ -112,3 +112,18 @@ Authorization: Bearer {{jwtToken}}
     "content": "dale dale dale dale"
 }
 
+# UPLOAD ######################################################################
+
+### Upload Image
+# @name uploadImage
+POST {{baseUrl}}/upload
+Authorization: Bearer {{jwtToken}}
+Content-Type: multipart/form-data; boundary=----BryenFormBoundary
+
+------BryenFormBoundary
+Content-Disposition: form-data; name="file"; filename="image.png"
+Content-Type: image/png
+
+< ../dev/images/image.png
+------BryenFormBoundary--
+
